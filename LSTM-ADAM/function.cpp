@@ -18,6 +18,7 @@
 using namespace std;
 
 int func_id = 0;
+static int counter = 0;
 
 PVariable variable_construct_for_function(Function *f, int rows, int cols) {
     PVariable r = PVariable(variable_construct(rows, cols), variable_destroy);
@@ -877,6 +878,18 @@ void FunctionMeanSquaredError::backward(cuMat &p_grad, vector<PVariable > &input
     x->data.minus(t->data, rr->data);
     float batch_size = rr->data.cols;
     if (x->isGetGrad) x->grad.plus(rr->data, x->grad);
+
+    /* explainable */
+    if(counter % 10 == 0)
+      {
+	float *tmp;
+	tmp = (float*)calloc(x->data.cols * x->data.rows, sizeof(float));
+	cublasGetVector(x->data.rows * x->data.cols, sizeof(float), x->data.mDevice, 1, tmp, 1 );
+	cout << "[" << counter << "]" << "FunctionMeanSquaredError:Grad:" << *tmp << endl;
+	free(tmp);
+      }
+
+    counter++;
 }
 
 
