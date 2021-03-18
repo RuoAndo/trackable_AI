@@ -98,7 +98,6 @@ public:
 			    sizeof(float), w->data.mDevice, 1, tmp, 1 );
 	    //cout << "Weight_Data:" << *tmp << endl;
 
-
 	    float *tmp2;
 	    tmp2 = (float*)calloc(w->grad.cols * w->grad.rows, sizeof(float));
 	    cublasGetVector(w->grad.rows * w->grad.cols,
