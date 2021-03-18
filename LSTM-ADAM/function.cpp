@@ -880,6 +880,7 @@ void FunctionMeanSquaredError::backward(cuMat &p_grad, vector<PVariable > &input
     if (x->isGetGrad) x->grad.plus(rr->data, x->grad);
 
     /* explainable */
+    /*
     if(counter % 10 == 0)
       {
 	float *tmp;
@@ -890,6 +891,7 @@ void FunctionMeanSquaredError::backward(cuMat &p_grad, vector<PVariable > &input
       }
 
     counter++;
+    */
 }
 
 
