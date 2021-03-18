@@ -10,6 +10,8 @@
 #include "model.h"
 #include "optimizer.h"
 
+static int counter = 0;
+
 int64_t get_rand_range( uint64_t min_val, uint64_t max_val ) {
     // 乱数生成器
     static std::mt19937_64 mt64(0);
@@ -75,15 +77,39 @@ public:
         int tmp; 
         OptimizerAdamParams &op = (OptimizerAdamParams &)opp;
 
+	/*
         tmp = get_rand_range(9980,10000);
-        // cout << "rand:" << tmp << endl;
+        cout << "rand:" << tmp << endl;
         beta2 = (float)tmp/10000; 
-        // cout << "beta2:" << beta2 << endl;
+        cout << "beta2:" << beta2 << endl;
         tmp = get_rand_range(88,92); 
         beta1 = (float)tmp/100; 
-        // cout << "beta1:" << beta1 << endl; 
+        cout << "beta1:" << beta1 << endl;
+	*/
+	
         op.adam_w_m.adam2(op.adam_w_v, w->grad, op.ndw, beta1, beta2, lr_f(-lr, epoch), 1e-8);
         w->data.plus(op.ndw, w->data);
+
+	if(counter % 10 == 0)
+	  {	   
+	    float *tmp;
+	    tmp = (float*)calloc(w->data.cols * w->data.rows, sizeof(float));
+	    cublasGetVector(w->data.rows * w->data.cols,
+			    sizeof(float), w->data.mDevice, 1, tmp, 1 );
+	    //cout << "Weight_Data:" << *tmp << endl;
+
+
+	    float *tmp2;
+	    tmp2 = (float*)calloc(w->grad.cols * w->grad.rows, sizeof(float));
+	    cublasGetVector(w->grad.rows * w->grad.cols,
+			    sizeof(float), w->grad.mDevice, 1, tmp2, 1 );
+	    cout << "Weight_Grad:" << *tmp2 << ":Weight_Data:" << *tmp << endl;
+
+	    free(tmp);
+	    free(tmp2);
+	  }
+
+	counter++;
     }
 
 };
