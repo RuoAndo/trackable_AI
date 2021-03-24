@@ -1,1 +1,1 @@
-<img="cnn-adagrad-grad.png">
+<img src="cnn-adagrad-grad.png">
