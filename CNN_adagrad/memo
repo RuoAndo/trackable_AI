@@ -6,4 +6,5 @@ cat log | grep -v test | grep -v ecpoch | cut -d ":" -f 3 | grep "%" | tr -d "%"
 
 cat log | grep -v time | grep -v saving | grep -v test | grep -v ecpoch | cut -d ":" -f 2 | cut -d " " -f 1 > loss1
 
+cat log | cut -d ":" -f2 | grep "0" | grep -v time | grep -v accurecy | grep -v loss | shuf -n 5000 > tmp
 
